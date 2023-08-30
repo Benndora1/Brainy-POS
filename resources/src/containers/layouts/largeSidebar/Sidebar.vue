@@ -243,6 +243,7 @@
                      || currentUserPermissions.includes('Reports_purchase') 
                      || currentUserPermissions.includes('Reports_quantity_alerts')
                      || currentUserPermissions.includes('Reports_sales') 
+                     || currentUserPermissions.includes('product_sold')
                      || currentUserPermissions.includes('Reports_suppliers')
                      || currentUserPermissions.includes('Reports_customers')
                      || currentUserPermissions.includes('Top_products')
@@ -841,7 +842,24 @@
               <i class="nav-icon i-Line-Chart"></i>
               <span class="item-name">{{$t('SalesReport')}}</span>
             </router-link>
-          </li>
+          </li><li
+          class="nav-item"
+          v-if="currentUserPermissions && currentUserPermissions.includes('Reports_sales')"
+        >
+          <router-link tag="a" class to="/app/reports/product_sold">
+            <i class="nav-icon i-Line-Chart"></i>
+            <span class="item-name">{{$t('Products Sold Report')}}</span>
+          </router-link>
+        </li>
+          <!-- <li
+            class="nav-item"
+            v-if="currentUserPermissions && currentUserPermissions.includes('Product_sold')"          
+          >
+          <router-link tag="a" class to="/app/reports/product_sold" >
+            <i class="nav-icon i-Line-Chart"></i>
+            <span class="item-name">{{$t('product_sold')}}</span>
+          </router-link>
+        </li> -->
           <li
             class="nav-item"
             v-if="currentUserPermissions && currentUserPermissions.includes('Reports_purchase')"
