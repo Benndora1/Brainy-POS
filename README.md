@@ -185,6 +185,6 @@
 # Version 4.0.2
 
 + Added Mpesa Till Number
-+ Added Shipping fee in the Pos recipt 
++ Added Shipping fee in the Pos receipt 
 + Added Product Sold Reports
 + Small Bug fixes
