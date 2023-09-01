@@ -407,7 +407,7 @@ class SalesController extends BaseController
                 if($value['sale_unit_id'] !== null){
                     if ($current_Sale->statut == "completed") {
 
-                        if ($value['product_variant_id'] !== null) {
+                        if ($value['product_variant_id'] !== null) {   
                             $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                                 ->where('warehouse_id', $current_Sale->warehouse_id)
                                 ->where('product_id', $value['product_id'])
@@ -732,10 +732,12 @@ class SalesController extends BaseController
 
     //------------- EXPORT  SALE to EXCEL-----------\\
 
-    public function exportExcel(Request $request)
+    public function exportExcel(Request $request, $startDate, $endDate)
     {
         $this->authorizeForUser($request->user('api'), 'view', Sale::class);
-        return Excel::download(new SalesExport, 'List_Sales.xlsx');
+        return Excel::download(new SalesExport($startDate, $endDate), 'List_Sales.xlsx');
+        // return Excel::download(SalesExport::whereBetween('create_at',[$startDate,$endDate])->get(), 'List_Sales.xlsx');
+
     }
 
     //---------------- Get Details Sale-----------------\\

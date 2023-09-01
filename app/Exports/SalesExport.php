@@ -16,14 +16,37 @@ class SalesExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
     /**
      * @return \Illuminate\Support\Collection
      */
+    public $startDate;
+    public $endDate;
+
+
+    public function __construct($startDate,$endDate){
+        
+        
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+
+        
+    }
     function array(): array
     {
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
-
+        // dd($this->startDate);
         // Check If User Has Permission View  All Records
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/',  $this->startDate)) {
+            $this->startDate .= ' 00:00:00';
+        } else {
+            $this->startDate = '1970-01-01 00:00:00';
+        }
+        $this->endDate .= ' 23:59:59';
+
+        
+        // dd($this->startDate, $this->endDate);
         $Sales = Sale::with('details', 'client', 'facture', 'warehouse','user')
             ->where('deleted_at', '=', null)
+            // ->where('created_at', '>=', $this->startDate)
+            ->whereBetween('created_at',[$this->startDate,$this->endDate])
             ->where(function ($query) use ($view_records) {
                 if (!$view_records) {
                     return $query->where('user_id', '=', Auth::user()->id);

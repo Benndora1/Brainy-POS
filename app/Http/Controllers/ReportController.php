@@ -1008,7 +1008,7 @@ class ReportController extends BaseController
         $data = array();
 
         $Sales = Sale::select('sales.*')
-            ->with('facture', 'client', 'warehouse')
+            ->with('facture', 'client', 'warehouse','details.product')
             ->join('clients', 'sales.client_id', '=', 'clients.id')
             ->where('sales.deleted_at', '=', null)
             ->whereBetween('sales.date', array($request->from, $request->to));
@@ -1042,6 +1042,7 @@ class ReportController extends BaseController
             ->limit($perPage)
             ->orderBy('sales.' . $order, $dir)
             ->get();
+        
 
         foreach ($Sales as $Sale) {
 
@@ -1061,7 +1062,7 @@ class ReportController extends BaseController
             $item['paid_amount'] = $Sale['paid_amount'];
             $item['due'] = $Sale['GrandTotal'] - $Sale['paid_amount'];
             $item['payment_status'] = $Sale['payment_statut'];
-
+            $item['product_name'] = $Sale['details'][0]['product']['name'];
             $data[] = $item;
         }
 
@@ -3466,68 +3467,118 @@ class ReportController extends BaseController
 
 
     // ------------- Get sales with Product names --------\\
-    public function get_sales_product_name(request $request)
-    {
-         $this->authorizeForUser($request->user('api'), 'product_sold', Product::class);
-        // How many items do you want displayed
-        $perPage = $request->limit;
-        $pageStart = \Request::get('page',1);
+    // public function get_sales_product_name(request $request)
+    // {
+    //      $this->authorizeForUser($request->user('api'), 'Product_sold', Product::class);
+    //     // How many items do you want displayed
+    //     $perPage = $request->limit;
+    //     $pageStart = \Request::get('page',1);
 
-        //start displaying items from this number;
-        $offSet = ($pageStart * $perPage ) - $perPage;
+    //     //start displaying items from this number;
+    //     $offSet = ($pageStart * $perPage ) - $perPage;
 
-        // $Role = Auth::user()->roles()->first();  
-        $param = array(0 => 'like', 1 => 'like');
-        $columns = array(0 => 'Ref', 1 => 'product');
+    //     // $Role = Auth::user()->roles()->first();  
+    //     $param = array(0 => 'like', 1 => 'like');
+    //     $columns = array(0 => 'Ref', 1 => 'product');
 
-        $Salez = SaleDetail::join('sales', 'sale_details.sale_id', '=', 'sales.id')
-        ->join('products', 'sale_details.product_id', '=', 'product.id')
-        ->where('sales.deleted_at', '=', null)
-         ->whereBetween('sales.date', array($request->from, $request->to));
+    //     $Salez = SaleDetail::join('sales', 'sale_details.sale_id', '=', 'sales.id')
+    //     ->join('products', 'sale_details.product_id', '=', 'product.id')
+    //     ->where('sales.deleted_at', '=', null)
+    //      ->whereBetween('sales.date', array($request->from, $request->to));
 
 
-         // check if the user has permission to see the records
-         $Salez = $helpers->Show_Records($Salez);
+    //      // check if the user has permission to see the records
+    //      $Salez = $helpers->Show_Records($Salez);
 
-         //Multiple Filter
+    //      //Multiple Filter
 
-         $Filtred = $helpers->filter($Salez, $param, $columns, $request)
+    //      $Filtred = $helpers->filter($Salez, $param, $columns, $request)
          
-         ->where(function ($query) use ($request){
-            return $query->when($request->filled('search'),function($query)use ($request){
+    //      ->where(function ($query) use ($request){
+    //         return $query->when($request->filled('search'),function($query)use ($request){
+    //             return $query->where('sales.date', $request->search)
+    //                 ->orWhere('sales.GrandTotal', $request->search)
+    //                 ->orwhere('product.name', 'Like', "%{$request->search}%");
+    //         });
+    //      });
+
+
+    //      $totalRows = $Filtred->count();
+    //      if($perPage == "-1"){
+    //         $perPage = $totalRows;
+    //      }
+
+    //      $Salez = $Filtred->offset($offSet)
+    //         ->limit($perPage)
+    //         ->orderBy('sales.' . $order, $dir)
+    //         ->get();
+
+    //         foreach($Salez as $Sale)
+    //         {
+    //             $item['id'] = $Sale['id'];
+    //             $item['date'] = $Sale['date'];
+    //             $item['Ref'] = $Sale['Ref'];
+    //             $item['GrandTotal'] = $Sale['GrandTotal'];
+    //             $item['product_name'] = $Sale['name'];
+
+    //             $data[] = $item;
+    //         }
+
+    //         // return reponse()->json(['totalRows' => $totalRows, 'sales' => $data]);
+    //         return response()->json(['totalRows' => $totalRows, 'sales' => $data]);
+
+    // }
+    public function get_sales_product_name(Request $request)
+    {
+        $this->authorizeForUser($request->user('api'), 'Product_sold', Product::class);
+    
+        $perPage = $request->limit;
+        $pageStart = $request->get('page', 1);
+        $offSet = ($pageStart * $perPage) - $perPage;
+    
+        $order = $request->get('order', 'asc');
+        $dir = $request->get('dir', 'id');
+    
+        $salesQuery = SaleDetail::join('sales', 'sale_details.sale_id', '=', 'sales.id')
+            ->join('products', 'sale_details.product_id', '=', 'products.id')
+            ->where('sales.deleted_at', '=', null)
+            ->whereBetween('sales.date', [$request->from, $request->to]);
+    
+        $userHasPermission = $helpers->Show_Records($salesQuery);
+        
+        $filteredQuery = $helpers->filter($userHasPermission, ['like', 'like'], ['Ref', 'product'], $request)
+            ->when($request->filled('search'), function ($query) use ($request) {
                 return $query->where('sales.date', $request->search)
                     ->orWhere('sales.GrandTotal', $request->search)
-                    ->orwhere('product.name', 'Like', "%{$request->search}%");
+                    ->orWhere('products.name', 'like', "%{$request->search}%");
             });
-         });
-
-
-         $totalRows = $Filtred->count();
-         if($perPage == "-1"){
+    
+        $totalRows = $filteredQuery->count();
+    
+        if ($perPage == "-1") {
             $perPage = $totalRows;
-         }
-
-         $Salez = $Filtred->offset($offSet)
+        }
+    
+        $sales = $filteredQuery->offset($offSet)
             ->limit($perPage)
             ->orderBy('sales.' . $order, $dir)
             ->get();
-
-            foreach($Salez as $Sale)
-            {
-                $item['id'] = $Sale['id'];
-                $item['date'] = $Sale['date'];
-                $item['Ref'] = $Sale['Ref'];
-                $item['GrandTotal'] = $Sale['GrandTotal'];
-                $item['product_name'] = $Sale['name'];
-
-                $data[] = $item;
-            }
-
-            // return reponse()->json(['totalRows' => $totalRows, 'sales' => $data]);
-            return response()->json(['totalRows' => $totalRows, 'sales' => $data]);
-
+    
+        $data = [];
+        foreach ($sales as $sale) {
+            $item = [
+                'id' => $sale->id,
+                'date' => $sale->date,
+                'Ref' => $sale->Ref,
+                'GrandTotal' => $sale->GrandTotal,
+                'product_name' => $sale->name,
+            ];
+            $data[] = $item;
+        }
+    
+        return response()->json(['totalRows' => $totalRows, 'sales' => $data]);
     }
-
+    
     //------------- download_report_client_pdf -----------\\
 
     public function download_report_client_pdf(Request $request, $id)

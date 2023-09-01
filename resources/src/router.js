@@ -837,15 +837,7 @@ const routes = [
                                 "./views/app/pages/reports/product_sold"
                             )
                     },
-                    {
-                        name: "purchase_report",
-                        path: "purchase_report",
-                        component: () =>
-                            import(
-                                /* webpackChunkName: "purchase_report" */
-                                "./views/app/pages/reports/purchase_report"
-                            )
-                    },
+                  
                     {
                         name: "purchase_report",
                         path: "purchase_report",
@@ -984,7 +976,7 @@ const routes = [
     },
 
     {
-        path: "not_authorize",
+        path: "/not_authorize",
         name: "not_authorize",
         component: () =>
             import(

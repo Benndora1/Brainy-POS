@@ -52,7 +52,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get("report/provider_returns", "ReportController@Returns_Provider");
     Route::get("report/ToProviders", "ReportController@ToProviders");
     Route::get("report/Sales", "ReportController@Report_Sales");
-    Route::get("report/Salez","ReportController@Product_sold");
+    Route::get("report/salesQuery","ReportController@Product_sold");
     Route::get("report/Purchases", "ReportController@Report_Purchases");
     Route::get("report/Get_last_Sales", "ReportController@Get_last_Sales");
     Route::get("report/stock_alert", "ReportController@Products_Alert");
@@ -293,7 +293,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get('sales/payments/{id}', 'SalesController@Payments_Sale');
     Route::post('sales/send/email', 'SalesController@Send_Email');
     Route::post('sales/send/sms', 'SalesController@Send_SMS');
-    Route::get('sales/export/Excel', 'SalesController@exportExcel');
+    Route::get('sales/export/Excel/{start_date}/{end_date}', 'SalesController@exportExcel');
     Route::post('sales/delete/by_selection', 'SalesController@delete_by_selection');
 
     //-------------------------------  Shipments --------------------------\\

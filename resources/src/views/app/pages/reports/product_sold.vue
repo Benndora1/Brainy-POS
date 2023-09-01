@@ -65,7 +65,7 @@ import "jspdf-autotable";
 
 export default {
   metaInfo: {
-    title: "Top Selling Products"
+    title: "Products Sold Report"
   },
   components: { DateRangePicker },
   data() {
@@ -107,6 +107,15 @@ export default {
     ...mapGetters(["currentUser"]),
     columns() {
       return [
+
+      { 
+        label: this.$t('date'),
+        field: "date",
+        tdClass: "text-left",
+        thClass: "text-left",
+        sortable: false
+
+      },
         {
           label: this.$t("ProductCode"),
           field: "code",
@@ -128,13 +137,13 @@ export default {
           thClass: "text-left",
           sortable: false
         },
-        {
-          label: this.$t("TotalSales"),
-          field: "total_sales",
-          tdClass: "text-left",
-          thClass: "text-left",
-          sortable: false
-        },
+        // {
+        //   label: this.$t("TotalSales"),
+        //   field: "total_sales",
+        //   tdClass: "text-left",
+        //   thClass: "text-left",
+        //   sortable: false
+        // },
 
         {
           label: this.$t("Quantity"),
@@ -162,16 +171,17 @@ export default {
       var self = this;
       let pdf = new jsPDF("p", "pt");
       let columns = [
+        { title: "Date", dataKey: "date"},
         { title: "Product Code", dataKey: "code" },
         { title: "Product Name", dataKey: "name" },
         { title: "Price", dataKey: "price" },
-        { title: "Total Sales", dataKey: "total_sales" },
+        // { title: "Total Sales", dataKey: "total_sales" },
         { title: "Quantity", dataKey: "quantity" },
         { title: "Total Amount", dataKey: "total" },
       ];
       pdf.autoTable(columns, self.products);
-      pdf.text("Top Selling Products", 40, 25);
-      pdf.save("Top_Selling_Products.pdf");
+      pdf.text("Product Sold Report", 40, 25);
+      pdf.save("Product_Sold_Report.pdf");
     },
 
     //---- update Params Table

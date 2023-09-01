@@ -48,6 +48,7 @@
             <i class="i-File-Copy"></i> PDF
           </b-button>
           <b-button @click="Sales_Excel()" size="sm" variant="outline-danger ripple m-1">
+          
             <i class="i-File-Excel"></i> EXCEL
           </b-button>
         </div>
@@ -170,7 +171,7 @@ export default {
 components: { DateRangePicker },
   data() {
     return {
-     startDate: "", 
+     startDate: "1970-01-01", 
      endDate: "", 
      dateRange: { 
        startDate: "", 
@@ -379,7 +380,7 @@ components: { DateRangePicker },
       NProgress.start();
       NProgress.set(0.1);
       axios
-        .get("sales/export/Excel", {
+        .get("sales/export/Excel/" +this.startDate +'/' +this.endDate, {
           responseType: "blob", // important
           headers: {
             "Content-Type": "application/json"
