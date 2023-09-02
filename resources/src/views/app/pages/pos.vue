@@ -603,8 +603,7 @@
                   :total-rows="product_totalRows"
                   :per-page="product_perPage"
                   v-model="product_currentPage"
-                  class="my-0 gull-pagination align-items-center"
-                  align="center"
+                  class="my-0 gull-pagination align-items-center" align="center"
                   first-text
                   last-text
                 >
@@ -760,6 +759,9 @@
             <div style="max-width:400px;margin:0px auto">
               <div class="info">
                 <h2 class="text-center">{{invoice_pos.setting.CompanyName}}</h2>
+                <div class="logo">
+                 <img :src="'/images/'+currentUser.logo" alt width="60" height="60">
+                </div>
                 <p>
                   <span>{{$t('date')}} : {{invoice_pos.sale.date}} <br></span>
                   <span v-show="pos_settings.show_address">{{$t('Adress')}} : {{invoice_pos.setting.CompanyAdress}} <br></span>
@@ -848,10 +850,18 @@
                 </tbody>
               </table>
 
+
+              <div id="legalcopy" class="ml-2">
+                <p>
+                  <strong> <span v-show="pos_settings.show_till">{{ $t('Till Number') }} : {{invoice_pos.setting.till}}  <br></span></strong>
+                </p>
+
+              </div>
               <div id="legalcopy" class="ml-2">
                 <p class="legal" v-show="pos_settings.show_note">
                   <strong>{{pos_settings.note_customer}}</strong>
                 </p>
+                
                 <div id="bar" v-show="pos_settings.show_barcode">
                   <barcode
                     class="barcode"
@@ -864,6 +874,13 @@
                     width="1"
                   ></barcode>
                 </div>
+              </div>
+              <div id="legalcopy" class="ml-2">
+                <p>
+                 <strong> 
+                  You were served by{{currentUser.username}}
+                </strong>
+                </p>
               </div>
             </div>
           </div>
@@ -949,15 +966,17 @@
                               [
                               {label: 'Cash', value: 'Cash'},
                               {label: 'credit card', value: 'credit card'},
-                              {label: 'cheque', value: 'cheque'},
-                              
                               {label: 'Mpesa', value: 'Mpesa'},
+                            //  {label: 'cheque', value: 'cheque'},
+                             // {label: 'Western Union', value: 'Western Union'},
+                              //{label: 'bank transfer', value: 'bank transfer'},
+                             // {label: 'other', value: 'other'},
                               ]"
                           ></v-select>
                           <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                         </b-form-group>
                       </validation-provider>
-                    </b-col> -->
+                    </b-col>
 
                     <b-col md="12" v-if="payment.Reglement == 'credit card'">
                       <form id="payment-form">
@@ -1068,10 +1087,10 @@
                 <b-col md="6" sm="12">
                   <validation-provider
                     name="Email customer"
-                    :rules="{ required: true}"
+                    :rules="{ required: false}"
                     v-slot="validationContext"
                   >
-                    <b-form-group :label="$t('Email') + ' ' + '*'">
+                    <b-form-group :label="$t('Email') + ' '">
                       <b-form-input
                         :state="getValidationState(validationContext)"
                         aria-describedby="Email-feedback"
@@ -1086,14 +1105,23 @@
 
                 <!-- Customer Phone -->
                 <b-col md="6" sm="12">
-                    <b-form-group :label="$t('Phone')">
-                      <b-form-input
-                        label="Phone"
-                        v-model="client.phone"
-                        :placeholder="$t('Phone')"
-                      ></b-form-input>
-                    </b-form-group>
-                </b-col>
+              <validation-provider
+                name="Phone Number"
+                :rules="{ required: true}"
+                 v-slot="validationContext"
+              >
+              <b-form-group :label="$t('Phone') + '' + '*'">
+                  <b-form-input
+                    :state="getValidationState(validationContext)"
+                    aria-describedby="Email-feedback"
+                    label="Phone"
+                    :placeholder="$t('Phone')"
+                    v-model="client.phone"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="Email-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                </b-form-group>
+              </validation-provider>
+            </b-col>
 
                 <!-- Customer Country -->
                 <b-col md="6" sm="12">
@@ -1236,7 +1264,8 @@ export default {
           CompanyName: "",
           CompanyAdress: "",
           email: "",
-          CompanyPhone: ""
+          CompanyPhone: "",
+          till: "",
         }
       },
 
@@ -2360,7 +2389,7 @@ export default {
 .total {
   font-weight: bold;
   font-size: 14px;
-  /* text-transform: uppercase; */
-  /* height: 50px; */
+  text-transform: uppercase;
+  height: 50px;
 }
 </style>

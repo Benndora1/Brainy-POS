@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddProductNameToSaleDetailsTable extends Migration
+class AddShowTillPosSettingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class AddProductNameToSaleDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::table('sale_details', function (Blueprint $table) {
-            $table->string('product_name')->after('product_id');
-
-
-            //
-        });
+        
+       Schema::table('pos_settings', function (Blueprint $table) {
+        $table->boolean('show_till')->default(false)->after('show_customer');
+    });
     }
 
     /**
@@ -28,10 +26,8 @@ class AddProductNameToSaleDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_details', function (Blueprint $table) {
-            //
-            $table->dropColumn('product_name');
-
+        Schema::table('pos_settings', function (Blueprint $table) {
+            $table->dropColumn('show_till');
         });
     }
 }

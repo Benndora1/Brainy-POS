@@ -235,12 +235,12 @@ components: { DateRangePicker },
           tdClass: "text-left",
           thClass: "text-left"
         },
-        {
-          label: this.$t('ProductName'),
-          field: "product_name",
-          tdClass: "text-left",
-          thClass: "text-left"
-        },
+        // {
+        //   label: this.$t('ProductName'),
+        //   field: "product_name",
+        //   tdClass: "text-left",
+        //   thClass: "text-left"
+        // },
         {
           label: this.$t("Status"),
           field: "statut",
@@ -363,7 +363,7 @@ components: { DateRangePicker },
         { title: "Ref", dataKey: "Ref" },
         { title: "Client", dataKey: "client_name" },
         { title: "Status", dataKey: "statut" },
-        { title: "Product", dataKey: "name"},
+        { title: "Product", dataKey: "product_name"},
         { title: "Total", dataKey: "GrandTotal" },
         { title: "Paid", dataKey: "paid_amount" },
         { title: "Due", dataKey: "due" },

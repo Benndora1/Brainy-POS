@@ -33,9 +33,9 @@
                 <b-col md="6" class="mb-2">
                   <validation-provider
                     name="Code Product"
-                    :rules="{ required: false}"
+                    :rules="{ required: true}"
                   >
-                    <b-form-group slot-scope="{ valid, errors }" :label="$t('CodeProduct') + ' '">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('CodeProduct') + ' ' + '*'">
                       <div class="input-group">
                         <b-form-input
                           :class="{'is-invalid': !!errors.length}"

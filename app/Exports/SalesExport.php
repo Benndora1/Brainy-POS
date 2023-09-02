@@ -59,14 +59,19 @@ class SalesExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
             foreach ($Sales as $sale) {
 
                 $item['Ref'] = $sale->Ref;
-                $item['client'] = $sale['client']->name;
-                $item['created_by'] = $sale['user']->username;
-                $item['statut'] = $sale->statut;
+                $item['date'] = $sale['date'];
+                $item['product_name'] = $sale['details'][0]['product']['name'];
                 $item['GrandTotal'] = number_format($sale->GrandTotal, 2);
                 $item['Paid'] = number_format($sale->paid_amount, 2);
                 $item['due'] = number_format($sale->GrandTotal - $sale->paid_amount, 2);
-                $item['payment_status'] = $sale->payment_statut;
-                $item['shipping_status'] = $sale->shipping_status;
+                $item['created_by'] = $sale['user']->username;
+                // $item['client'] = $sale['client']->name;
+                // $item['statut'] = $sale->statut;
+                // $item['GrandTotal'] = number_format($sale->GrandTotal, 2);
+                // $item['payment_status'] = $sale->payment_statut;
+                // $item['shipping_status'] = $sale->shipping_status;
+                // $item['product_name'] = $sale['details'][0]['product']['name'];
+
 
                 $data[] = $item;
             }
@@ -106,14 +111,18 @@ class SalesExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
     {
         return [
             'Reference',
-            'Customer',
-            'Created by',
-            'Status',
+            // 'Customer',
+            // 'Created by',
+            // 'Status',
+            'Date',
+            'Product Name',
             'Total',
             'Paid',
             'Due',
-            'Payment Status',
-            'Shipping Status',
+            'Created by',
+            // 'Payment Status',
+            // 'Shipping Status',
+            
         ];
     }
 }

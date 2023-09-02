@@ -982,6 +982,7 @@ class SalesController extends BaseController
         $sale['client_phone'] = $sale_data['client']->phone;
         $sale['client_adr'] = $sale_data['client']->adresse;
         $sale['client_email'] = $sale_data['client']->email;
+        $sale['name'] = $sale_data['details']['product']->name;
         $sale['TaxNet'] = number_format($sale_data->TaxNet, 2, '.', '');
         $sale['discount'] = number_format($sale_data->discount, 2, '.', '');
         $sale['shipping'] = number_format($sale_data->shipping, 2, '.', '');
@@ -992,7 +993,7 @@ class SalesController extends BaseController
         $sale['paid_amount'] = number_format($sale_data->paid_amount, 2, '.', '');
         $sale['due'] = number_format($sale['GrandTotal'] - $sale['paid_amount'], 2, '.', '');
         $sale['payment_status'] = $sale_data->payment_statut;
-
+dd($sale);
         $detail_id = 0;
         foreach ($sale_data['details'] as $detail) {
 
