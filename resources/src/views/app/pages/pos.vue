@@ -792,6 +792,11 @@
                   </tr>
 
                   <tr style="margin-top:10px" v-show="pos_settings.show_discount">
+                    <td colspan="3" class="total">{{$t('Shipping')}}</td>
+                    <td style="text-align:right;" class="total">{{invoice_pos.shipping}} {{formatNumber(invoice_pos.sale.shipping, 2)}}</td>
+                  </tr>
+
+                  <tr style="margin-top:10px" v-show="pos_settings.show_discount">
                     <td colspan="3" class="total">{{$t('Discount')}}</td>
                     <td style="text-align:right;" class="total">{{invoice_pos.symbol}} {{formatNumber(invoice_pos.sale.discount ,2)}}</td>
                   </tr>
@@ -878,7 +883,7 @@
               <div id="legalcopy" class="ml-2">
                 <p>
                  <strong> 
-                  You were served by{{currentUser.username}}
+                  You were served by {{currentUser.username}}
                 </strong>
                 </p>
               </div>

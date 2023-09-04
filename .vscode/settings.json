@@ -1,7 +1,7 @@
-{
-    "rest.api": {
-        "autoStart": true,
-        "openInBrowser": true,
-        "port": 1781
-    }
-}
+// {
+//     "rest.api": {
+//         "autoStart": true,
+//         "openInBrowser": true,
+//         "port": 1781
+//     }
+// }
