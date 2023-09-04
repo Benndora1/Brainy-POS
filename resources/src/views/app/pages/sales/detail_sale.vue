@@ -104,8 +104,9 @@
                       <th scope="col">{{$t('Quantity')}}</th>
                       <th scope="col">{{$t('UnitPrice')}}</th>
                       <th scope="col">{{$t('Discount')}}</th>
-                      <th scope="col">{{$t('Tax')}}</th>
-                      <th scope="col">{{$t('SubTotal')}}</th>
+                      <th scope="col">{{$t('Shipping')}}</th>
+                      <!-- <th scope="col">{{$t('Tax')}}</th> -->
+                      <th scope="col">{{$t('GrandTotal')}}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -116,9 +117,10 @@
                       <td>{{currentUser.currency}} {{formatNumber(detail.Net_price,3)}}</td>
                       <td>{{formatNumber(detail.quantity,2)}} {{detail.unit_sale}}</td>
                       <td>{{currentUser.currency}} {{formatNumber(detail.price,2)}}</td>
-                      <td>{{currentUser.currency}} {{formatNumber(detail.DiscountNet,2)}}</td>
-                      <td>{{currentUser.currency}} {{formatNumber(detail.taxe,2)}}</td>
-                      <td>{{currentUser.currency}} {{detail.total.toFixed(2)}}</td>
+                      <td>{{currentUser.currency}} {{formatNumber(sale.discount,2)}}</td>
+                      <td>{{currentUser.currency}} {{sale.shipping.toFixed(2)}}</td>
+                      <!-- <td>{{currentUser.currency}} {{formatNumber(detail.taxe,2)}}</td> -->
+                      <td>{{currentUser.currency}} {{sale.GrandTotal}}</td>
                     </tr>
                   </tbody>
                 </table>
